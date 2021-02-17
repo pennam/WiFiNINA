@@ -180,6 +180,39 @@ int8_t WiFiDrv::wifiSetPassphrase(const char* ssid, uint8_t ssid_len, const char
     return _data;
 }
 
+int8_t WiFiDrv::wifiSetBssiPassphrase(const uint8_t* bssid, uint8_t bssid_len, const char* ssid, uint8_t ssid_len, const char *passphrase, const uint8_t len)
+{
+	WAIT_FOR_SLAVE_SELECT();
+    // Send Command
+    SpiDrv::sendCmd(SET_BSSI_PASSPHRASE_CMD, PARAM_NUMS_3);
+    SpiDrv::sendParam((uint8_t*)bssid, bssid_len, NO_LAST_PARAM);
+    SpiDrv::sendParam((uint8_t*)ssid, ssid_len, NO_LAST_PARAM);
+    SpiDrv::sendParam((uint8_t*)passphrase, len, LAST_PARAM);
+
+    // pad to multiple of 4
+    int commandSize = 7 + bssid_len + ssid_len + len;
+    while (commandSize % 4) {
+        SpiDrv::readChar();
+        commandSize++;
+    }
+
+    SpiDrv::spiSlaveDeselect();
+    //Wait the reply elaboration
+    SpiDrv::waitForSlaveReady();
+    SpiDrv::spiSlaveSelect();
+
+    // Wait for reply
+    uint8_t _data = 0;
+    uint8_t _dataLen = 0;
+    if (!SpiDrv::waitResponseCmd(SET_BSSI_PASSPHRASE_CMD, PARAM_NUMS_1, &_data, &_dataLen))
+    {
+        WARN("error waitResponse");
+        _data = WL_FAILURE;
+    }
+    SpiDrv::spiSlaveDeselect();
+    return _data;
+}
+
 
 int8_t WiFiDrv::wifiSetKey(const char* ssid, uint8_t ssid_len, uint8_t key_idx, const void *key, const uint8_t len)
 {

@@ -104,6 +104,27 @@ int WiFiClass::begin(const char* ssid, const char *passphrase)
     return status;
 }
 
+int WiFiClass::begin(const uint8_t* bssid, const char* ssid, const char *passphrase)
+{
+    uint8_t status = WL_IDLE_STATUS;
+
+    // set passphrase and BSSI
+    if (WiFiDrv::wifiSetBssiPassphrase(bssid, 6, ssid, strlen(ssid), passphrase, strlen(passphrase))!= WL_FAILURE)
+    {
+        for (unsigned long start = millis(); (millis() - start) < _timeout;)
+        {
+            delay(WL_DELAY_START_CONNECTION);
+            status = WiFiDrv::getConnectionStatus();
+            if ((status != WL_IDLE_STATUS) && (status != WL_NO_SSID_AVAIL) && (status != WL_SCAN_COMPLETED)) {
+                break;
+            }
+        }
+    }else{
+        status = WL_CONNECT_FAILED;
+    }
+    return status;
+}
+
 uint8_t WiFiClass::beginAP(const char *ssid)
 {
 	return beginAP(ssid, 1);

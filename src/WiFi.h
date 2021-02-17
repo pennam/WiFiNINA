@@ -76,6 +76,8 @@ public:
      */
     int begin(const char* ssid, const char *passphrase);
 
+    int begin(const uint8_t *bssid, const char* ssid, const char *passphrase);
+
     uint8_t beginAP(const char *ssid);
     uint8_t beginAP(const char *ssid, uint8_t channel);
     uint8_t beginAP(const char *ssid, const char* passphrase);

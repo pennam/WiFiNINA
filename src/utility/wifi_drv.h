@@ -98,6 +98,8 @@ public:
      */
     static int8_t wifiSetPassphrase(const char* ssid, uint8_t ssid_len, const char *passphrase, const uint8_t len);
 
+    static int8_t wifiSetBssiPassphrase(const uint8_t* bssid, uint8_t bssid_len, const char* ssid, uint8_t ssid_len, const char *passphrase, const uint8_t len);
+
     /* Start WiFi connection with WEP encryption.
      * Configure a key into the device. The key type (WEP-40, WEP-104)
      * is determined by the size of the key (5 bytes for WEP-40, 13 bytes for WEP-104).

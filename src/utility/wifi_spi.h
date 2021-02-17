@@ -112,6 +112,8 @@ enum {
     APPLY_OTA_COMMAND	= 0x65,
 	RENAME_FILE			= 0x66,
 	DOWNLOAD_OTA		= 0x67,
+
+    SET_BSSI_PASSPHRASE_CMD = 0x70,
 };
 
 
